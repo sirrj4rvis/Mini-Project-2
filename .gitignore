@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment files
+.env
+**/.env
+.env.local
+**/.env.local
+!**/.env.example
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+venv/
+env/
+.venv/
+ml-service/venv/
+
+# ML artifacts
+ml-service/models/*.pkl
+ml-service/models/*.joblib
+ml-service/data/*.csv
+Amazon Products Sales Dataset 2023/
+Flipkart Retail Product Dataset/
+Myntra Fashion Product Dataset/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Testing
+coverage/
+.nyc_output/
+**/.pytest_cache/
+
+# Local/generated browser and tool state
+chrome-profile/
+chrome-profile-pdf/
+chrome-profile-pdf2/
+.cache.json

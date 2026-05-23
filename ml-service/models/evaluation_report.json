@@ -1,0 +1,62 @@
+{
+  "trained_at": "2026-05-07T06:36:45.226873",
+  "dataset_rows": 22800,
+  "features": [
+    "day_of_week",
+    "day_of_month",
+    "month",
+    "is_weekend",
+    "is_festival",
+    "days_since_start",
+    "price_lag_1",
+    "price_lag_3",
+    "price_lag_7",
+    "price_lag_14",
+    "rolling_mean_7",
+    "rolling_mean_14",
+    "rolling_mean_30",
+    "rolling_std_7",
+    "rolling_min_7",
+    "rolling_max_7",
+    "price_momentum",
+    "price_acceleration",
+    "mrp",
+    "rating",
+    "review_count",
+    "category_enc",
+    "platform_enc"
+  ],
+  "models": [
+    {
+      "name": "GradientBoosting",
+      "mae": 109.56,
+      "rmse": 289.15,
+      "r2": 0.9999,
+      "mape": 0.5
+    },
+    {
+      "name": "LinearRegression",
+      "mae": 191.69,
+      "rmse": 365.55,
+      "r2": 0.9999,
+      "mape": 3.87
+    },
+    {
+      "name": "Ridge",
+      "mae": 201.51,
+      "rmse": 379.52,
+      "r2": 0.9999,
+      "mape": 4.14
+    },
+    {
+      "name": "RandomForest",
+      "mae": 272.27,
+      "rmse": 571.4,
+      "r2": 0.9997,
+      "mape": 1.04
+    }
+  ],
+  "winner": "GradientBoosting",
+  "train_size": 18600,
+  "test_size": 4200
+}

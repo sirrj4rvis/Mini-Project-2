@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PriceLens Project Report</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 18mm 16mm;
+    }
+
+    :root {
+      --ink: #211914;
+      --muted: #6f625b;
+      --paper: #f7f2eb;
+      --panel: #fffdf8;
+      --line: #ded4ca;
+      --accent: #9d5438;
+      --accent-dark: #2f1d14;
+      --accent-soft: #efe0d7;
+      --green: #2f7d4c;
+      --amber: #a66f16;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      background: var(--paper);
+      font-size: 12.2pt;
+      line-height: 1.55;
+    }
+
+    .page {
+      min-height: 260mm;
+      page-break-after: always;
+      position: relative;
+      padding: 10mm 0 0;
+    }
+    .page:last-child { page-break-after: auto; }
+
+    .cover {
+      min-height: 260mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 18mm 8mm 10mm;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(157,84,56,0.14), rgba(47,29,20,0.05) 35%, transparent 70%),
+        var(--panel);
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 12px;
+    }
+    .mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 20pt;
+      font-weight: 700;
+    }
+    .lens {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+      position: relative;
+      display: inline-block;
+    }
+    .lens:before {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      border: 2px solid white;
+      border-radius: 50%;
+    }
+    .lens:after {
+      content: "";
+      position: absolute;
+      left: 21px;
+      top: 22px;
+      width: 9px;
+      height: 2px;
+      background: white;
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+
+    .eyebrow {
+      font-family: Arial, Helvetica, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    h1, h2, h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--ink);
+      line-height: 1.1;
+      margin: 0;
+    }
+    h1 {
+      font-size: 36pt;
+      letter-spacing: -0.02em;
+      margin-top: 8mm;
+    }
+    h2 {
+      font-size: 21pt;
+      margin: 9mm 0 4mm;
+      padding-bottom: 2mm;
+      border-bottom: 1.5px solid var(--accent);
+    }
+    h3 {
+      font-size: 15pt;
+      margin: 6mm 0 2mm;
+      color: var(--accent-dark);
+    }
+    p { margin: 0 0 3.5mm; }
+    ul, ol { margin: 2mm 0 4mm 6mm; padding-left: 5mm; }
+    li { margin-bottom: 1.4mm; }
+
+    .subtitle {
+      font-size: 16pt;
+      color: var(--muted);
+      max-width: 155mm;
+      margin-top: 6mm;
+    }
+    .cover-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5mm;
+      margin-top: 14mm;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+    }
+    .meta-card,
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255,253,248,0.88);
+      padding: 5mm;
+      border-radius: 7px;
+    }
+    .meta-card strong {
+      display: block;
+      font-size: 8pt;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      margin-bottom: 1mm;
+    }
+
+    .chapter-title {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 5mm;
+    }
+    .chapter-title .num {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 2mm 3mm;
+      border-radius: 99px;
+      font-size: 9pt;
+      font-weight: 700;
+    }
+
+    .toc {
+      margin-top: 8mm;
+      border-top: 1px solid var(--line);
+    }
+    .toc-row {
+      display: grid;
+      grid-template-columns: 12mm 1fr 12mm;
+      gap: 4mm;
+      border-bottom: 1px solid var(--line);
+      padding: 3mm 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 10.5pt;
+    }
+    .toc-row span:first-child,
+    .toc-row span:last-child {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4mm 0 6mm;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9.5pt;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 2.4mm 2.8mm;
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+    .small { font-family: Arial, Helvetica, sans-serif; font-size: 9.5pt; color: var(--muted); }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 1mm 2.5mm;
+      margin: 0 1mm 1.4mm 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5mm;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4mm;
+    }
+    .stat {
+      border-left: 4px solid var(--accent);
+      background: var(--panel);
+      padding: 4mm;
+      min-height: 29mm;
+    }
+    .stat b {
+      display: block;
+      font-size: 16pt;
+      line-height: 1;
+      margin-bottom: 2mm;
+    }
+
+    .diagram {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 5mm;
+      margin: 5mm 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9pt;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 3mm;
+      align-items: stretch;
+      text-align: center;
+    }
+    .box {
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--accent);
+      background: #fff;
+      padding: 3mm 2mm;
+      border-radius: 6px;
+      min-height: 18mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .arrow {
+      text-align: center;
+      color: var(--accent);
+      font-weight: 700;
+      margin: 2mm 0;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 9pt;
+      color: var(--accent-dark);
+      background: #f1e8df;
+      padding: 0.3mm 1mm;
+      border-radius: 3px;
+    }
+    .note {
+      border-left: 4px solid var(--amber);
+      background: #fff8eb;
+      padding: 4mm;
+      margin: 4mm 0;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 9.5pt;
+    }
+    .ok { color: var(--green); font-weight: 700; }
+    .warn { color: var(--amber); font-weight: 700; }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid var(--line);
+      padding-top: 2mm;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+  <section class="cover">
+    <div>
+      <div class="brand-row">
+        <div class="mark"><span class="lens"></span> PriceLens.</div>
+        <div class="eyebrow">Mini Project Report</div>
+      </div>
+      <div style="margin-top: 24mm;">
+        <div class="eyebrow">Actual Implementation Based Documentation</div>
+        <h1>Intelligent E-Commerce Price Comparison and Prediction Platform</h1>
+        <p class="subtitle">
+          A full-stack web application for searching products, comparing marketplace prices,
+          tracking price history, receiving price alerts, and generating buy/wait recommendations
+          using a Python ML microservice.
+        </p>
+      </div>
+      <div class="cover-meta">
+        <div class="meta-card">
+          <strong>Frontend</strong>
+          React, TanStack Router/Start, Vite, Tailwind CSS, React Query, Recharts
+        </div>
+        <div class="meta-card">
+          <strong>Backend</strong>
+          Node.js, Express.js, MongoDB, Mongoose, JWT authentication
+        </div>
+        <div class="meta-card">
+          <strong>ML Service</strong>
+          Flask, scikit-learn, pandas, NumPy, joblib, Playwright-backed Flipkart scraping
+        </div>
+        <div class="meta-card">
+          <strong>Prepared On</strong>
+          7 May 2026
+        </div>
+      </div>
+    </div>
+    <div class="small">
+      This report has been corrected to match the implemented project codebase and removes
+      unsupported or unused claims from earlier reference material.
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Table of Contents</h2>
+      <span class="num">00</span>
+    </div>
+    <div class="toc">
+      <div class="toc-row"><span>01</span><span>Abstract</span><span>03</span></div>
+      <div class="toc-row"><span>02</span><span>Introduction and Problem Statement</span><span>04</span></div>
+      <div class="toc-row"><span>03</span><span>Objectives and Scope</span><span>05</span></div>
+      <div class="toc-row"><span>04</span><span>Technology Stack</span><span>06</span></div>
+      <div class="toc-row"><span>05</span><span>System Architecture</span><span>07</span></div>
+      <div class="toc-row"><span>06</span><span>Module Implementation</span><span>08</span></div>
+      <div class="toc-row"><span>07</span><span>Database Design</span><span>12</span></div>
+      <div class="toc-row"><span>08</span><span>API Design</span><span>14</span></div>
+      <div class="toc-row"><span>09</span><span>Machine Learning Implementation</span><span>16</span></div>
+      <div class="toc-row"><span>10</span><span>Testing, Limitations, and Future Scope</span><span>18</span></div>
+      <div class="toc-row"><span>11</span><span>Conclusion</span><span>20</span></div>
+    </div>
+    <div class="footer"><span>PriceLens Project Report</span><span>02</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Abstract</h2>
+      <span class="num">01</span>
+    </div>
+    <p>
+      PriceLens is an intelligent e-commerce price comparison platform developed as a
+      three-service application. The frontend provides a modern product discovery interface,
+      search results, product detail pages, analytics, price alerts, a dashboard, admin views,
+      and community discussion pages. The backend exposes a REST API for authentication,
+      product search, comparison, alerts, admin analytics, forum posts, and communication with
+      the ML service. The ML service provides price prediction and recommendation endpoints
+      and also serves as the bridge for Flipkart scraping.
+    </p>
+    <p>
+      The implemented system aggregates product data from Amazon through RapidAPI, eBay through
+      the official Browse API, Walmart through RapidAPI, and Flipkart through a Python scraping
+      endpoint. Products are normalized into a shared format, stored in MongoDB, and enriched
+      with price history records. The platform then uses these records to show comparisons,
+      charts, and machine-learning-assisted recommendations.
+    </p>
+    <div class="note">
+      Corrected scope: the implementation does not monitor hundreds of marketplaces. The actual
+      marketplace integrations present in code are Amazon, eBay, Walmart, Flipkart, and fallback
+      mock/scraped data for unavailable external results.
+    </div>
+    <div class="grid-3">
+      <div class="stat"><b>3</b>Application services: client, server, and ML service.</div>
+      <div class="stat"><b>4</b>Main marketplace paths: Amazon, eBay, Walmart, and Flipkart.</div>
+      <div class="stat"><b>MongoDB</b>Stores users, products, alerts, price history, forum data, and search logs.</div>
+    </div>
+    <div class="footer"><span>Abstract</span><span>03</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Introduction</h2>
+      <span class="num">02</span>
+    </div>
+    <p>
+      Online shoppers often compare prices manually across multiple websites before making a
+      purchase. This process is time-consuming and can still miss better deals, historical price
+      patterns, or future price drops. PriceLens addresses this problem by combining product
+      aggregation, price comparison, alerting, historical tracking, and prediction in one
+      application.
+    </p>
+    <h3>Problem Statement</h3>
+    <p>
+      The project aims to design and implement a full-stack platform where users can search for
+      a product, compare its prices across available marketplaces, inspect price history, and
+      receive actionable recommendations about whether to buy now or wait.
+    </p>
+    <h3>Need for the System</h3>
+    <ul>
+      <li>Prices vary across platforms and can change frequently.</li>
+      <li>Manual comparison does not preserve historical pricing trends.</li>
+      <li>Users need alerts when a product reaches a target price.</li>
+      <li>Decision support is more useful when historical data and prediction are combined.</li>
+    </ul>
+    <h3>Implemented Outcome</h3>
+    <p>
+      The delivered project includes a React frontend, Express backend, MongoDB database layer,
+      and Flask ML microservice. It supports product search, marketplace comparison, product
+      detail pages, watchlist behavior, price alert creation, admin statistics, forum discussions,
+      and ML-based recommendation fallbacks.
+    </p>
+    <div class="footer"><span>Introduction and Problem Statement</span><span>04</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Objectives and Scope</h2>
+      <span class="num">03</span>
+    </div>
+    <h3>Objectives</h3>
+    <ul>
+      <li>Build a responsive frontend for searching and viewing products.</li>
+      <li>Fetch product results from supported external marketplace services.</li>
+      <li>Normalize different marketplace response formats into a single product model.</li>
+      <li>Persist product and price history data in MongoDB.</li>
+      <li>Provide comparison, history, prediction, and redirect APIs.</li>
+      <li>Support user accounts, refresh-token authentication, dashboards, watchlists, and alerts.</li>
+      <li>Expose admin and community forum modules for platform management and user discussions.</li>
+    </ul>
+    <h3>Implemented Scope</h3>
+    <table>
+      <thead><tr><th>Area</th><th>Implemented in Code</th></tr></thead>
+      <tbody>
+        <tr><td>Product Search</td><td>Search endpoint aggregates Amazon, eBay, Flipkart, Walmart, and fallback products.</td></tr>
+        <tr><td>Price Comparison</td><td>Product sources are embedded under each Product document and sorted by price.</td></tr>
+        <tr><td>Price History</td><td>PriceHistory documents are inserted during product upsert for valid source prices.</td></tr>
+        <tr><td>ML Prediction</td><td>Express calls Flask /predict and /recommend through mlBridgeService with retry and fallback.</td></tr>
+        <tr><td>Alerts</td><td>JWT-protected alert CRUD routes with target price, target percentage, cooldown, and email support.</td></tr>
+        <tr><td>Community</td><td>Forum post and comment APIs with voting and protected editing/deletion.</td></tr>
+        <tr><td>Admin</td><td>Admin dashboard route and protected API for statistics, users, products, and alerts.</td></tr>
+      </tbody>
+    </table>
+    <h3>Out of Scope or Not Fully Implemented</h3>
+    <ul>
+      <li>No evidence of live monitoring across 200+ stores.</li>
+      <li>Some frontend dashboard charts use placeholder chart data where backend time-series analytics are not present.</li>
+      <li>Homepage product cards use local mock products; product detail handles them separately from real MongoDB products.</li>
+      <li>Mock product purchase links are converted to store search URLs, not exact product listing URLs.</li>
+    </ul>
+    <div class="footer"><span>Objectives and Scope</span><span>05</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Technology Stack</h2>
+      <span class="num">04</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Frontend</h3>
+        <p>
+          React 19, TanStack Router/Start, Vite, TypeScript, Tailwind CSS,
+          React Query, Zustand, Axios, Recharts, Framer Motion, Lucide React,
+          and reusable UI components.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Backend</h3>
+        <p>
+          Node.js, Express.js, Mongoose, MongoDB, JWT, bcryptjs, express-validator,
+          express-rate-limit, Helmet, CORS, Winston logging, Morgan, Nodemailer,
+          and node-cron.
+        </p>
+      </div>
+      <div class="card">
+        <h3>ML Service</h3>
+        <p>
+          Python Flask, flask-cors, scikit-learn, pandas, NumPy, SciPy, joblib,
+          BeautifulSoup, lxml, Playwright, Playwright stealth, requests, and
+          dotenv.
+        </p>
+      </div>
+      <div class="card">
+        <h3>Database and Tools</h3>
+        <p>
+          MongoDB stores application data. Jest, Supertest, and mongodb-memory-server
+          are available for backend tests. Flask tests exist under the ML service.
+        </p>
+      </div>
+    </div>
+    <h3>Runtime Ports</h3>
+    <table>
+      <thead><tr><th>Service</th><th>Port</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Client</td><td>5173</td><td>Vite/TanStack frontend application.</td></tr>
+        <tr><td>Server</td><td>5000</td><td>Express REST API mounted under /api.</td></tr>
+        <tr><td>ML Service</td><td>8000</td><td>Flask endpoints for prediction, recommendation, reports, and Flipkart scraping.</td></tr>
+      </tbody>
+    </table>
+    <div class="footer"><span>Technology Stack</span><span>06</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>System Architecture</h2>
+      <span class="num">05</span>
+    </div>
+    <p>
+      PriceLens follows a modular architecture where the frontend communicates with the
+      Express backend, the backend persists data in MongoDB, and ML-related requests are
+      delegated to the Flask microservice. External product integrations are isolated in
+      service files and normalized before being stored.
+    </p>
+    <div class="diagram">
+      <div class="flow">
+        <div class="box">React Frontend<br/>TanStack routes</div>
+        <div class="box">Express API<br/>/api routes</div>
+        <div class="box">Service Layer<br/>marketplace + ML bridge</div>
+        <div class="box">MongoDB<br/>Mongoose models</div>
+        <div class="box">Flask ML Service<br/>prediction + scraper</div>
+      </div>
+      <div class="arrow">Client requests -> API validation -> service aggregation -> storage and response -> charts/recommendations</div>
+    </div>
+    <h3>High-Level Request Flow</h3>
+    <ol>
+      <li>User searches for a product from the frontend search page.</li>
+      <li>The frontend calls <code>GET /api/products/search?q=...</code>.</li>
+      <li>The backend queries Amazon, eBay, Flipkart, and Walmart services where available.</li>
+      <li>Raw results are normalized into a common product format.</li>
+      <li>Products are upserted into MongoDB and price history points are inserted.</li>
+      <li>The frontend receives unified product responses and renders comparison cards.</li>
+      <li>Product detail pages call prediction and history APIs for deeper decision support.</li>
+    </ol>
+    <h3>Service Boundaries</h3>
+    <table>
+      <thead><tr><th>Layer</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>Frontend</td><td>UI rendering, routing, state, forms, charts, user actions, and API calls.</td></tr>
+        <tr><td>Backend API</td><td>Validation, auth, aggregation, database operations, cache, rate limiting, and error handling.</td></tr>
+        <tr><td>ML Service</td><td>Prediction, buy/wait/watch recommendation, model report endpoint, and Flipkart scraping.</td></tr>
+        <tr><td>Database</td><td>Persistent product, price, alert, user, forum, comment, and search records.</td></tr>
+      </tbody>
+    </table>
+    <div class="footer"><span>System Architecture</span><span>07</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Frontend Implementation</h2>
+      <span class="num">06A</span>
+    </div>
+    <p>
+      The frontend is built as a Vite/TanStack application. It uses route-based pages,
+      shared components, Axios API helpers, and React Query for server-state fetching.
+      Product cards are reused across homepage, trending, and search views.
+    </p>
+    <h3>Main Pages</h3>
+    <table>
+      <thead><tr><th>Route</th><th>Implemented Function</th></tr></thead>
+      <tbody>
+        <tr><td><code>/</code></td><td>Homepage with search, feature sections, and local trending product cards.</td></tr>
+        <tr><td><code>/search</code></td><td>Product search with filters, sorting, pagination, grid/list layouts, and ProductCard display.</td></tr>
+        <tr><td><code>/product/$id</code></td><td>Product detail, offers, ML recommendation, chart, alerts, and Amazon reviews when backend product has ASIN.</td></tr>
+        <tr><td><code>/trending</code></td><td>Fetches backend trending products and adapts them to frontend product cards.</td></tr>
+        <tr><td><code>/dashboard</code></td><td>Authenticated user dashboard using watchlist and alert data.</td></tr>
+        <tr><td><code>/alerts</code></td><td>User price alert list and delete functionality.</td></tr>
+        <tr><td><code>/forum</code></td><td>Community post listing, filtering, sorting, and post creation modal.</td></tr>
+        <tr><td><code>/admin</code></td><td>Admin-only dashboard with overview, user management, products, and analytics UI.</td></tr>
+      </tbody>
+    </table>
+    <h3>Important Frontend Corrections</h3>
+    <ul>
+      <li>Homepage products use local slugs, not MongoDB ObjectIds. The product detail route now detects this and loads matching mock products locally.</li>
+      <li>Mock product offer links originally used <code>#</code>. The detail page now generates real store search URLs when a direct product URL is unavailable.</li>
+      <li>Backend product IDs still use the original API path and MongoDB validation.</li>
+    </ul>
+    <h3>State and Data Handling</h3>
+    <p>
+      Public product APIs are wrapped in <code>productApi.ts</code>. Authenticated actions
+      use <code>axiosPrivate</code>, which attaches access tokens and refreshes tokens on
+      401 responses. Product responses from backend are transformed through
+      <code>adaptProduct</code> so frontend components can use a consistent shape.
+    </p>
+    <div class="footer"><span>Frontend Implementation</span><span>08</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Backend Implementation</h2>
+      <span class="num">06B</span>
+    </div>
+    <p>
+      The backend is an Express REST API. It applies Helmet, CORS, JSON parsing,
+      global rate limiting, request logging, route-level validation, centralized error handling,
+      and MongoDB persistence through Mongoose.
+    </p>
+    <h3>Controller Responsibilities</h3>
+    <table>
+      <thead><tr><th>Controller</th><th>Responsibility</th></tr></thead>
+      <tbody>
+        <tr><td>authController</td><td>Registration, login, refresh token, profile, logout.</td></tr>
+        <tr><td>productController</td><td>Search, upsert, product details, history, compare, prediction, redirect, trending, autocomplete, watchlist, reviews.</td></tr>
+        <tr><td>alertController</td><td>Create, list, update, pause/resume, delete, and test alerts.</td></tr>
+        <tr><td>adminController</td><td>Dashboard stats, users, products, alerts, and admin management operations.</td></tr>
+        <tr><td>forumController</td><td>Forum posts, comments, votes, user posts, and protected edits.</td></tr>
+      </tbody>
+    </table>
+    <h3>Product Search Pipeline</h3>
+    <ol>
+      <li>Validate query parameters using express-validator.</li>
+      <li>Build or read a cache key for repeated searches.</li>
+      <li>Fetch marketplace data in parallel with <code>Promise.allSettled</code>.</li>
+      <li>Normalize Amazon, eBay, Flipkart, and Walmart results.</li>
+      <li>Merge products by normalized title.</li>
+      <li>Upsert products and insert price history entries.</li>
+      <li>Apply category, price, and platform filters.</li>
+      <li>Sort and return a unified response.</li>
+    </ol>
+    <h3>Security and Reliability</h3>
+    <ul>
+      <li>JWT authentication protects private routes such as alerts, dashboard data, watchlist, and admin APIs.</li>
+      <li>Passwords are hashed with bcrypt before saving.</li>
+      <li>Helmet, CORS, validation, and rate limiting are configured in the Express app.</li>
+      <li>ML calls use retry behavior, caching, and fallbacks when the Flask service is unavailable.</li>
+    </ul>
+    <div class="footer"><span>Backend Implementation</span><span>09</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Integration Modules</h2>
+      <span class="num">06C</span>
+    </div>
+    <h3>Marketplace Integrations</h3>
+    <table>
+      <thead><tr><th>Marketplace</th><th>Implementation</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Amazon</td><td>RapidAPI Real-Time Amazon Data API</td><td>Search, product details by ASIN, category list, and reviews.</td></tr>
+        <tr><td>eBay</td><td>Official eBay Browse API</td><td>Uses OAuth2 application token and marketplace ID configuration.</td></tr>
+        <tr><td>Walmart</td><td>RapidAPI realtime Walmart data</td><td>Search and rollback/deals endpoints.</td></tr>
+        <tr><td>Flipkart</td><td>Backend calls Flask scraper endpoint</td><td>Python service uses scraping logic and returns normalized raw data.</td></tr>
+        <tr><td>Fallback</td><td>Scraper service fallback products</td><td>Used only when live integrations return no products.</td></tr>
+      </tbody>
+    </table>
+    <h3>Normalization</h3>
+    <p>
+      The <code>productNormalizer</code> service converts platform-specific responses into
+      one product shape with fields for title, brand, image, category, description, ASIN,
+      search keywords, and source-specific price data. Currency conversion normalizes source
+      prices into the configured default currency, which defaults to INR.
+    </p>
+    <h3>ML Bridge</h3>
+    <p>
+      The Express backend does not directly run model inference. Instead, it sends product
+      history and metadata to the Flask service through <code>mlBridgeService</code>. This
+      bridge adds retries, timeout handling, cache support, payload normalization, and graceful
+      fallback responses.
+    </p>
+    <div class="note">
+      Implementation correction: eBay uses the Browse API rather than scraping. Flipkart is the
+      marketplace connected through the Python scraping endpoint.
+    </div>
+    <div class="footer"><span>Integration Modules</span><span>10</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Feature Modules</h2>
+      <span class="num">06D</span>
+    </div>
+    <h3>User Authentication</h3>
+    <p>
+      Users can register, log in, refresh tokens, fetch their profile, update profile data,
+      and log out. Private frontend requests use access tokens stored in local storage and
+      automatically request refresh tokens when a private request returns 401.
+    </p>
+    <h3>Price Alerts</h3>
+    <p>
+      Alerts are protected by JWT authentication. Each alert stores userId, productId,
+      targetPrice, optional percentage drop target, baselinePrice, platform, active status,
+      triggered state, notification flags, cooldown hours, recurring behavior, and notes.
+    </p>
+    <h3>Watchlist and Dashboard</h3>
+    <p>
+      Users can add or remove products from their watchlist through the product watchlist
+      endpoint. The dashboard fetches watchlist product data and user alerts to show tracked
+      products, basic savings, alert counts, and category summaries.
+    </p>
+    <h3>Admin Module</h3>
+    <p>
+      Admin UI guards access by checking user role. The admin area contains overview statistics,
+      user management, and product/alert views. Some chart series in the UI are presentation
+      placeholders because backend time-series analytics are not fully implemented.
+    </p>
+    <h3>Forum Module</h3>
+    <p>
+      Forum APIs allow listing posts publicly, reading individual posts, filtering by tag and
+      query, creating posts with authentication, editing or deleting owned posts, adding comments,
+      editing comments, deleting comments, and voting on posts or comments.
+    </p>
+    <div class="footer"><span>Feature Modules</span><span>11</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Database Design</h2>
+      <span class="num">07</span>
+    </div>
+    <p>
+      MongoDB is used as the persistent database, with Mongoose schemas defining the application
+      data model. The design centers on product aggregation and user-specific tracking.
+    </p>
+    <h3>Main Collections</h3>
+    <table>
+      <thead><tr><th>Collection</th><th>Purpose</th><th>Key Fields</th></tr></thead>
+      <tbody>
+        <tr><td>User</td><td>Accounts and preferences.</td><td>name, email, password, role, watchlist, refreshToken, notificationPrefs.</td></tr>
+        <tr><td>Product</td><td>Aggregated product records.</td><td>title, normalizedTitle, brand, category, imageUrl, sources, lowestPrice, highestPrice, averagePrice, asin.</td></tr>
+        <tr><td>PriceHistory</td><td>Historical price points.</td><td>productId, platform, price, originalPrice, currency, availability, timestamp.</td></tr>
+        <tr><td>Alert</td><td>User price alerts.</td><td>userId, productId, targetPrice, targetPctDrop, platform, triggered, cooldownHours.</td></tr>
+        <tr><td>SearchHistory</td><td>Searches and clicked products.</td><td>userId, query, resultCount, clickedProductId, source, ipAddress.</td></tr>
+        <tr><td>ForumPost</td><td>Community posts.</td><td>title, content, tags, userId, productId, votes.</td></tr>
+        <tr><td>Comment</td><td>Forum comments.</td><td>postId, userId, text, parentId, votes.</td></tr>
+      </tbody>
+    </table>
+    <h3>Product Source Subdocument</h3>
+    <p>
+      Each Product contains an embedded <code>sources</code> array. Every source stores platform,
+      price, currency, original price, discount, link, availability, rating, review count,
+      seller, and last updated time. This allows one product record to hold marketplace-specific
+      current prices without requiring a separate collection for current source snapshots.
+    </p>
+    <h3>Indexes</h3>
+    <ul>
+      <li>Product text index over title, searchKeywords, and brand.</li>
+      <li>Product indexes over lowestPrice, category plus lowestPrice, and searchCount.</li>
+      <li>Alert indexes for active alert cron checks, user alert dashboard queries, and product-level alert lookups.</li>
+      <li>User indexes for role and active status plus recent creation sorting.</li>
+    </ul>
+    <div class="footer"><span>Database Design</span><span>12</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>API Design</h2>
+      <span class="num">08</span>
+    </div>
+    <h3>Product APIs</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Endpoint</th><th>Actual Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>GET</td><td><code>/api/products/search</code></td><td>Search and aggregate products.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/trending</code></td><td>Fetch Walmart rollbacks and DB trending products.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/autocomplete</code></td><td>Return suggestions from search history and product text search.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id</code></td><td>Fetch MongoDB product by ObjectId.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id/history</code></td><td>Fetch grouped and flat price history.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id/compare</code></td><td>Return source comparison sorted by price.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id/predict</code></td><td>Fetch ML prediction and recommendation.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id/redirect</code></td><td>Return selected platform purchase URL.</td></tr>
+        <tr><td>GET</td><td><code>/api/products/:id/amazon-reviews</code></td><td>Fetch live Amazon reviews only when ASIN is available.</td></tr>
+        <tr><td>POST</td><td><code>/api/products/:id/watchlist</code></td><td>Toggle authenticated user's watchlist item.</td></tr>
+      </tbody>
+    </table>
+    <h3>Other Main APIs</h3>
+    <table>
+      <thead><tr><th>Area</th><th>Endpoint Pattern</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Auth</td><td><code>/api/auth/*</code></td><td>Register, login, refresh, me, profile, logout.</td></tr>
+        <tr><td>Alerts</td><td><code>/api/alerts/*</code></td><td>Protected alert CRUD and test email endpoint.</td></tr>
+        <tr><td>Forum</td><td><code>/api/forum/*</code></td><td>Public reads and protected write/vote actions.</td></tr>
+        <tr><td>Admin</td><td><code>/api/admin/*</code></td><td>Role-protected management APIs.</td></tr>
+        <tr><td>ML Proxy</td><td><code>/api/ml/*</code></td><td>Backend bridge routes to ML status/report behavior.</td></tr>
+      </tbody>
+    </table>
+    <h3>Validation</h3>
+    <p>
+      Search query, pagination, platform, sorting, category, price ranges, product ObjectIds,
+      history days, and autocomplete query values are validated by express-validator. Invalid
+      product IDs return a 422 validation response. This is why homepage mock product slugs
+      are handled locally by the frontend detail page rather than sent to the product API.
+    </p>
+    <div class="footer"><span>API Design</span><span>14</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Machine Learning Implementation</h2>
+      <span class="num">09</span>
+    </div>
+    <p>
+      The ML service is implemented as a separate Flask application. It loads serialized model
+      artifacts from the <code>models</code> directory when available and exposes prediction,
+      recommendation, batch prediction, model report, health, and Flipkart scrape endpoints.
+    </p>
+    <h3>Prediction Logic</h3>
+    <ol>
+      <li>Receive product price history and optional metadata from Express.</li>
+      <li>Require at least three historical price points for prediction.</li>
+      <li>Build date, lag, rolling window, momentum, category, platform, rating, review count, and MRP features.</li>
+      <li>Use trained pipeline artifacts when present.</li>
+      <li>Blend primary model output with linear regression when that artifact is available.</li>
+      <li>Fallback to linear extrapolation when trained artifacts are unavailable.</li>
+      <li>Return predicted price, confidence, price range, method, and current price.</li>
+    </ol>
+    <h3>Recommendation Logic</h3>
+    <p>
+      A deterministic rule-based recommendation converts predicted movement into
+      <code>BUY_NOW</code>, <code>WAIT</code>, or <code>WATCH</code>. A falling trend with
+      meaningful savings recommends waiting. A rising or stable trend tends toward buying now.
+      Unknown or insufficient data produces watch-style responses.
+    </p>
+    <h3>ML Endpoints</h3>
+    <table>
+      <thead><tr><th>Endpoint</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>GET /health</code></td><td>Returns service status and model readiness.</td></tr>
+        <tr><td><code>POST /predict</code></td><td>Predicts future price for one product.</td></tr>
+        <tr><td><code>POST /recommend</code></td><td>Generates a buy/wait/watch signal.</td></tr>
+        <tr><td><code>POST /batch-predict</code></td><td>Predicts multiple products in one request.</td></tr>
+        <tr><td><code>GET /model/report</code></td><td>Returns training evaluation report if present.</td></tr>
+        <tr><td><code>POST /scrape/flipkart</code></td><td>Runs Flipkart scraper for a query and page count.</td></tr>
+      </tbody>
+    </table>
+    <div class="footer"><span>Machine Learning Implementation</span><span>16</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Testing and Verification</h2>
+      <span class="num">10A</span>
+    </div>
+    <h3>Available Automated Tests</h3>
+    <table>
+      <thead><tr><th>Service</th><th>Testing Tools</th><th>Coverage Present</th></tr></thead>
+      <tbody>
+        <tr><td>Backend</td><td>Jest, Supertest, mongodb-memory-server</td><td>Auth and product search endpoint tests are present.</td></tr>
+        <tr><td>ML Service</td><td>Python tests</td><td>ML service test file exists under <code>ml-service/tests</code>.</td></tr>
+        <tr><td>Frontend</td><td>Build verification</td><td>Vite production build validates route/type/bundling behavior.</td></tr>
+      </tbody>
+    </table>
+    <h3>Recent Verification During Report Preparation</h3>
+    <ul>
+      <li>The frontend production build completed successfully after the product detail fixes.</li>
+      <li>The homepage mock-product validation issue was resolved by bypassing backend ObjectId validation for local slug products.</li>
+      <li>The homepage mock-product purchase link issue was resolved by generating external marketplace search URLs when offer links are placeholders.</li>
+    </ul>
+    <h3>Suggested Test Cases</h3>
+    <ul>
+      <li>Search returns normalized products from mocked marketplace services.</li>
+      <li>Invalid product IDs return validation errors from backend APIs.</li>
+      <li>Homepage mock products open detail pages without backend validation calls.</li>
+      <li>Mock product buy links open correct marketplace search URLs.</li>
+      <li>JWT-protected alert routes reject unauthenticated users.</li>
+      <li>ML prediction returns fallback when price history has fewer than three points.</li>
+    </ul>
+    <div class="footer"><span>Testing and Verification</span><span>18</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Limitations and Future Scope</h2>
+      <span class="num">10B</span>
+    </div>
+    <h3>Current Limitations</h3>
+    <ul>
+      <li>External marketplace coverage is limited to the integrations present in code.</li>
+      <li>External APIs require valid credentials and may return empty results when keys are missing or rate limits are reached.</li>
+      <li>ML accuracy depends on sufficient historical price records and available trained artifacts.</li>
+      <li>Homepage products are demo data, not database records.</li>
+      <li>Some admin and dashboard visualizations are UI placeholders rather than fully backend-driven time-series analytics.</li>
+      <li>Mock product purchase URLs search marketplaces instead of opening exact listings.</li>
+    </ul>
+    <h3>Future Enhancements</h3>
+    <ul>
+      <li>Add more official marketplace APIs with stable product identifiers.</li>
+      <li>Replace homepage demo products with backend-driven trending products.</li>
+      <li>Add full frontend automated tests with component and route coverage.</li>
+      <li>Add backend time-series analytics for admin activity charts.</li>
+      <li>Improve model training pipeline documentation and automate periodic retraining.</li>
+      <li>Add a browser-safe redirect tracking endpoint for all external purchase clicks.</li>
+      <li>Improve alert UX for percentage-drop alerts and recurring alert controls.</li>
+    </ul>
+    <h3>Deployment Considerations</h3>
+    <p>
+      Production deployment should define environment variables for MongoDB, JWT secrets,
+      API keys, email credentials, client origin, and ML service URL. The frontend should point
+      <code>VITE_API_URL</code> to the deployed backend. Backend and ML service logs should be
+      monitored because marketplace integrations depend on external services.
+    </p>
+    <div class="footer"><span>Limitations and Future Scope</span><span>19</span></div>
+  </section>
+
+  <section class="page">
+    <div class="chapter-title">
+      <h2>Conclusion</h2>
+      <span class="num">11</span>
+    </div>
+    <p>
+      PriceLens successfully implements a practical full-stack product comparison and price
+      intelligence platform. It combines a modern React frontend, Express API backend, MongoDB
+      persistence layer, and Python Flask ML service into a working architecture. The project
+      supports product search, marketplace comparison, product detail pages, price history,
+      alerts, dashboards, admin management, community discussions, and recommendation logic.
+    </p>
+    <p>
+      The corrected implementation shows that the strongest part of the project is its modular
+      service design: marketplace adapters, product normalization, MongoDB persistence, and ML
+      bridging are separated cleanly enough to extend later. The system is not a universal
+      marketplace monitor, but it is a functional and extensible foundation for intelligent
+      e-commerce comparison.
+    </p>
+    <h3>References</h3>
+    <ul>
+      <li>Project source code under <code>client/</code>, <code>server/</code>, and <code>ml-service/</code>.</li>
+      <li>React, TanStack Router, Vite, Tailwind CSS, Express.js, MongoDB, Mongoose, Flask, and scikit-learn documentation.</li>
+      <li>RapidAPI marketplace data services and eBay Browse API integration code used in this project.</li>
+    </ul>
+    <div class="note">
+      This report intentionally avoids unsupported statements such as "200+ stores", "fully real-time monitoring for all products",
+      or "exact Amazon redirect for demo products", because those statements are not supported by the current implementation.
+    </div>
+    <div class="footer"><span>Conclusion</span><span>20</span></div>
+  </section>
+</body>
+</html>
